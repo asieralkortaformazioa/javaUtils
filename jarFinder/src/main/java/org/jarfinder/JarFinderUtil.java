@@ -65,6 +65,7 @@ public class JarFinderUtil {
 
 			String jarEntryName;
 			Enumeration en = jarFile.entries();
+			System.out.println("jarFile.entries()"+jarFile.entries());
 			String jarName = "";
 
 			boolean matchCase = jarFinder.getIsCaseSensitive().isSelected();
