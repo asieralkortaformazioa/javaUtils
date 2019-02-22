@@ -27,6 +27,9 @@ public class JarFinderMojo extends AbstractMojo {
 	@Parameter(property = "findClass.caseSensitive", defaultValue = "true")
 	private String  caseSensitive;
 	
+	@Parameter(property = "findClass.plainSearch", defaultValue = "false")
+	private String  plainSearch;
+	
 	public String getClassName() {
 		return className;
 	}
@@ -38,10 +41,13 @@ public class JarFinderMojo extends AbstractMojo {
 	
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		// TODO Auto-generated method stub
+		logger.info("Usage: mvn org.none:jarFinder:1.0-SNAPSHOT:findClass -DfindClass.className=spring.context.xml -DfindClass.caseSensitive=false -DfindClass.plainSearch=true");
+		logger.info("Usage: mvn org.none:jarFinder:1.0-SNAPSHOT:findClass -DfindClass.className=org.cim.utils.JarFInder -DfindClass.caseSensitive=false -DfindClass.plainSearch=false");
 		
 		logger.info("JarFinderMojo: findClass: "+ className);
-		
 		logger.info("Porperty folder: "+ folder);
+		logger.info("CaseSensitive: "+ caseSensitive);
+		
 		String jarDirecotry=folder;
 		if (folder==null || "".equals(folder)) {
 			String userHome =System.getProperty("user.home");
@@ -51,7 +57,7 @@ public class JarFinderMojo extends AbstractMojo {
 		}
 		
 		logger.info("Searching please wait ...");
-		List<SearchResult> res= JarFinderUtil.findJar(jarDirecotry, className, "true".equalsIgnoreCase(caseSensitive));
+		List<SearchResult> res= JarFinderUtil.findJar(jarDirecotry, className, "true".equalsIgnoreCase(caseSensitive), "true".equalsIgnoreCase(plainSearch));
 		logger.info("Search DONE. Results (" + (res!=null?res.size():0)+")");
 		
 		logger.info("-------------------------< "+className+" >-------------------------");

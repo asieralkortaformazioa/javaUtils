@@ -74,7 +74,7 @@ public class JarFinderUtil {
 				JarEntry jarEntry = (JarEntry) en.nextElement();
 
 				jarEntryName = jarEntry.getName();
-
+				
 				if (!matchCase) {
 					jarEntryName = jarEntryName.toUpperCase();
 					className = className.toUpperCase();
@@ -118,7 +118,7 @@ public class JarFinderUtil {
 	
 	public static List<SearchResult> checkFileExistsNonUi(String jarFileStr, String className,
 			List jarList, boolean caseSensitive) {
-
+		//System.out.println("checkFileExistsNonUi jarFileStr:"+jarFileStr+" className:"+ className+" jarList:"+jarList+" caseSensitive:"+caseSensitive);
 		List<SearchResult> searchResult = new ArrayList<SearchResult>();
 		JarFile jarFile;
 		Set jarSet = new HashSet();
@@ -136,15 +136,23 @@ public class JarFinderUtil {
 				JarEntry jarEntry = (JarEntry) en.nextElement();
 
 				jarEntryName = jarEntry.getName();
-
+//				System.out.println("jarEntryName:_"+jarEntryName);
 				if (!matchCase) {
 					jarEntryName = jarEntryName.toUpperCase();
 					className = className.toUpperCase();
 				}
-
+//				System.out.println(" className"+className );
+//				if (jarEntryName.endsWith("XML")) {
+//					System.out.println("jarname:"+jarEntryName+" classname:"+className+" contains?"+(jarEntryName.indexOf(className)>-1)+"");
+//				}
 				if (jarEntryName.indexOf(className) != -1) {
-
+					//System.out.println("jarEntryName:_"+jarEntryName+" className"+className );	
 					if (!jarSet.contains(jarFileStr)) {
+//						System.out.println("jarEntryName:_"+jarEntryName+" className"+className );
+//						System.out.println("indexof classname:" +jarEntryName.indexOf(className));
+//						System.out.println("indexof classname .xml:" +jarEntryName.indexOf(className+".XML"));
+//						System.out.println("indexof classname /xml:" +jarEntryName.indexOf(className+"/XML"));
+						
 						//index++;
 						jarList.add(jarFileStr);
 						jarSet.add(jarFileStr);
@@ -181,7 +189,7 @@ public class JarFinderUtil {
 	}
 
 	
-	public static List<SearchResult> findJar (String directory, String fileName, boolean caseSensitive) {
+	public static List<SearchResult> findJar (String directory, String fileName, boolean caseSensitive, boolean plainSearch) {
 	
 		JarFinderUtil jarFinderUtil = new JarFinderUtil();
 		List jarFileList = new ArrayList();
@@ -189,7 +197,7 @@ public class JarFinderUtil {
 		System.out.println("Getting directory Jar file list...");
 		JarFinderUtil.getJarList(directory, jarFileList);
 
-		List<SearchResult> retList = JarFinderUtil.checkFileExistsNonUi(jarFileList, fileName, caseSensitive);
+		List<SearchResult> retList = JarFinderUtil.checkFileExistsNonUi(jarFileList, fileName, caseSensitive, plainSearch);
 		return retList;
 	}
 	
@@ -245,13 +253,13 @@ public class JarFinderUtil {
 		return jarList;
 	}
 	
-	
-	public static List checkFileExistsNonUi(List jarFileList, String className, boolean caseSensitive) {
+	public static List checkFileExistsNonUi(List jarFileList, String className, boolean caseSensitive, boolean plainSearch) {
 
 		List jarList = new ArrayList();
-
-		className = className.replaceAll("\\.", "/");
-
+		
+		if (!plainSearch) {
+			className = className.replaceAll("\\.", "/");
+		}
 		int maxSize = jarFileList.size();
 
 		for (int i = 0; i < jarFileList.size(); i++) {
